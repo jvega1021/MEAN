@@ -4,6 +4,9 @@ var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/user');
 var jwt = require('../services/jwt');
 
+var fs = require('fs');
+var path = require('path');
+
 //Controller Define Service
 
 
@@ -97,8 +100,59 @@ function loginUser(req, res){
 }
 
 
+function updateUser(req, res){
+	var userId = req.params.id;
+	var update = req.body;
+
+	User.findByIdAndUpdate(userId, update, (err, userUpdated) => {
+		if (err) {
+			res.status(500).send({message: 'Error al actualizar el usuario'})
+		} else {
+			if (!userUpdated) {
+				res.status(404).send({message: 'No se ha logrado actualizar el usuario'})
+			} else {
+				res.status(200).send({user: userUpdated})
+			}
+		}
+	});
+}
+
+
+function uploadImage(req, res){
+    var userId = req.params.id;
+    //var file_name = 'No subido...';
+
+    if (req.files) {
+
+      var file_path = req.files.image.path; /** Trae la ruta completa del fichero subido */
+      var file_ext = path.extname(file_path); /** Trae la extensión del fichero en esa ruta */
+      var file_name = path.basename(file_path); /** Trae el nombre base del fichero */
+
+        if (file_ext == '.png' || file_ext == '.jpg' || file_ext == '.jpeg') {
+
+            User.findByIdAndUpdate(userId, {image: file_name}, (err, userUpdated) => {
+                if (!userUpdated) {
+                    res.status(404).send({message: 'No se ha podido actualizar el usuario'});
+                }
+                else {
+                    res.status(200).send({image: file_name, user: userUpdated});
+                }
+            });
+        }
+        else {
+            res.status(200).send({message: 'Extension del archivo no valida.'});
+        }
+    }
+    else {
+        res.status(200).send({message: 'No has subido ninguna imagen'});
+    }
+
+}
+
 module.exports = {
 	test,
 	saveUser, 
-	loginUser
+	loginUser,
+	updateUser,
+	uploadImage
 };
