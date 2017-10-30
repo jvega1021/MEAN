@@ -3,13 +3,13 @@ My first application with MEAN
 
 # GET
 
- * http://localhost:3977/test   
+ * http://localhost:3977/api/test   
  
 # POST 
-  * http://localhost:3977/register
-  * http://localhost:3977/update/:id
-  * http://localhost:3977/:id
-  * http://localhost:3977/upload-image-user/:id
+  * http://localhost:3977/api/register
+  * http://localhost:3977/api/update/:id
+  * http://localhost:3977/api/:id
+  * http://localhost:3977/api/upload-image-user/:id
 
    
    
